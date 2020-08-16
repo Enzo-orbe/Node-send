@@ -3,6 +3,7 @@ const { check } = require("express-validator");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const enlacesController = require("../controllers/enlacesController");
+const archivosController = require("../controllers/archivosController");
 
 router.post(
   "/",
@@ -13,5 +14,7 @@ router.post(
   auth,
   enlacesController.nuevoEnlace
 );
+
+router.get("/:url", enlacesController.obtenerEnlace, archivosController.eliminarArchivo)
 
 module.exports = router;
