@@ -10,11 +10,11 @@ exports.nuevoEnlace = async (req, res, next) => {
     return res.status(400).json({ errores: errores.array() });
   }
   //crear un objeto
-  const { nombre_original, password } = req.body;
+  const { nombre_original, nombre } = req.body;
 
   const enlace = new Enlaces();
   enlace.url = shortid.generate();
-  enlace.nombre = shortid.generate();
+  enlace.nombre = nombre;
   enlace.nombre_original = nombre_original;
 
   //si el usuario esta autenticado
@@ -48,6 +48,17 @@ exports.nuevoEnlace = async (req, res, next) => {
 };
 
 
+//obtiene un listado de todos los enlaces 
+exports.todosEnlaces = async (req, res) => {
+  try {
+    const enlaces = await Enlaces.find({}).select("url -_id");
+    res.json({ enlaces });
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
 //obtener enlace 
 exports.obtenerEnlace = async (req, res, next) => {
 
@@ -62,6 +73,8 @@ exports.obtenerEnlace = async (req, res, next) => {
 
   //si el enlace existe 
   res.json({ archivo: enlace.nombre });
+
+  return;
 
   //si las descargas son iguales a 1 - borrar la entrada y borrar el archivo
   const { descargas, nombre } = enlace;
@@ -78,3 +91,4 @@ exports.obtenerEnlace = async (req, res, next) => {
     await enlace.save();
   }
 }
+
